@@ -5,6 +5,7 @@
     },
     "include": [
         "/build\\build\\generators\\CMakePresets.json",
-        "D:\\ForMe\\HttpExercise\\build\\generators\\CMakePresets.json"
+        "D:\\ForMe\\HttpExercise\\build\\generators\\CMakePresets.json",
+        "D:\\ForMe\\MyHttp\\build\\generators\\CMakePresets.json"
     ]
 }

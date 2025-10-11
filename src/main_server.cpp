@@ -20,12 +20,24 @@ public:
 
   void start()
   {
+    boost::asio::async_read(mSocket, mIncomingMessage, [this](const boost::system::error_code& ec,
+        std::size_t bytesTransferred) {
+          std::istream is(&mIncomingMessage);
+          std::string line;
+          std::getline(is, line);
+          std::cout << line << std::endl;
+    });
+
+
     mMessage = "Hello client!\n";
     boost::asio::async_write(mSocket, boost::asio::buffer(mMessage),
       [this](const boost::system::error_code& ec,
         std::size_t bytesTransferred) {
         auto x = 5;
+        std:: cout << "send message " << "Hello client" << std::endl;
     });
+
+
   }
 private:
   TcpConnection(boost::asio::io_context& io_context) : mSocket(io_context)
@@ -35,6 +47,7 @@ private:
 
   tcp::socket mSocket;
   std::string mMessage;
+  boost::asio::streambuf mIncomingMessage;
 };
 
 class TcpServer
@@ -72,7 +85,7 @@ int main() {
     boost::asio::io_context io;
     TcpServer server(io);
     io.run();
-
+    std::this_thread::sleep_for(std::chrono::seconds(10));
     //// 1. Create an acceptor that listens on port 5555
     //tcp::acceptor acceptor(io, tcp::endpoint(tcp::v4(), 5555));
 
