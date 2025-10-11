@@ -1,0 +1,100 @@
+---
+# Start with a reasonable default style
+BasedOnStyle: LLVM
+---
+Language: Cpp
+Standard: Latest
+
+#### Vector WI C++ Programming Guidelines ####
+
+# WI C++ Programming Guidelines 7.1 "Indent with Two Spaces, no Tabs Allowed (Mandatory)"
+# WI C++ Programming Guidelines 7.3 "Comments use the same Indentation as Program Code (Mandatory)"
+IndentWidth: 2
+UseTab: Never
+NamespaceIndentation: All
+
+# WI C++ Programming Guidelines 7.2 "Use of braces (Mandatory)"
+BreakBeforeBraces: Allman
+AllowShortBlocksOnASingleLine:       Never
+AllowShortCaseLabelsOnASingleLine:   false
+AllowShortEnumsOnASingleLine:        false
+AllowShortFunctionsOnASingleLine:    InlineOnly
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+AllowShortLambdasOnASingleLine:      All
+AllowShortLoopsOnASingleLine:        true
+
+# WI C++ Programming Guidelines 7.4.1 "Lines must not Exceed 120 Characters (Best Practice)"
+ColumnLimit: 120
+
+# WI C++ Programming Guidelines 7.4.2 "Indent Preprocessor Directives (Best Practice)"
+IndentPPDirectives: BeforeHash
+
+# WI C++ Programming Guidelines 7.4.6 "'*' and '&' are attached to the variable type, not the name (Best Practice)"
+DerivePointerAlignment: false
+PointerAlignment: Left
+ReferenceAlignment: Left
+
+#### Other required and useful CANoe specific settings ####
+
+# Function parameters should be aligned when spanning multiple lines
+AlignAfterOpenBracket: Align
+
+# Align assignments, bit-fields and macros if in consecutive lines
+AlignConsecutiveBitFields: Consecutive
+AlignConsecutiveMacros: Consecutive
+
+# When using '\' at end of line align it left-most
+AlignEscapedNewlines: Left
+
+# The return type of a function should never be in a line on its own, instead the parameters should be listed one per line
+AlwaysBreakAfterReturnType: None
+PenaltyReturnTypeOnItsOwnLine: 200
+
+# Break "template<A> functionName()"
+AlwaysBreakTemplateDeclarations: true
+
+# Put all arguments, parameters, constructor initializers on own line if they fit, otherwise use one line for each
+BinPackArguments: false
+BinPackParameters: false
+PackConstructorInitializers: NextLine
+
+# Initializer-list of construtor all on one line or (if too long) one per line
+BreakConstructorInitializers: BeforeComma
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+
+# Add name of namespace at the closing brace } of the namespace
+FixNamespaceComments: true
+
+# Define CANoe specific ForEach macros
+# Microsoft recommends to add 'TEST_CLASS' and 'TEST_METHOD' to ForEachMacros (see https://developercommunity.visualstudio.com/t/clang-format-uglifies-unit-tests-with-microsoft-c/635014)
+ForEachMacros: ['WITH_ARM_REGISTER', 'WITH_ARM_REGISTERS', 'TEST_CLASS', 'TEST_METHOD']
+
+# Handle CUT_SUBCASE macro as if
+IfMacros: ['CUT_SUBCASE']
+
+# Do not indent require clause
+IndentRequiresClause: false
+
+# Always insert braces for if, else, for, do and while
+InsertBraces: true
+
+# Insert a newline at end of file if missing
+InsertNewlineAtEOF: true
+
+# Every block starts with a brace, thus no empty newline should follow
+KeepEmptyLinesAtTheStartOfBlocks: false
+
+# The LLVM default of 300 often leads to unexpected line-breaks in lines with trailing comments (e.g. breaking after
+# an assignment operator). Therefore, we lower the penalty for line-breaks in comment.
+PenaltyBreakComment: 30
+
+# Do not sort includes because that could break compilation
+SortIncludes: Never
+
+# Do not add a space in "template<int>" before the <
+SpaceAfterTemplateKeyword: false
+
+# Define CANoe specific typenames, e.g. CAPL_FUNC_API(void)
+TypenameMacros: ['CAPL_FUNC_API']
+
+...
