@@ -20,9 +20,11 @@ public:
 
   void start()
   {
-    boost::asio::async_read(mSocket, mIncomingMessage, [this](const boost::system::error_code& ec,
+
+    auto self = shared_from_this();
+    boost::asio::async_read_until(mSocket, mIncomingMessage, '\n', [self](const boost::system::error_code& ec,
         std::size_t bytesTransferred) {
-          std::istream is(&mIncomingMessage);
+          std::istream is(&self->mIncomingMessage);
           std::string line;
           std::getline(is, line);
           std::cout << line << std::endl;
@@ -30,11 +32,11 @@ public:
 
 
     mMessage = "Hello client!\n";
+
     boost::asio::async_write(mSocket, boost::asio::buffer(mMessage),
-      [this](const boost::system::error_code& ec,
+      [self](const boost::system::error_code& ec,
         std::size_t bytesTransferred) {
-        auto x = 5;
-        std:: cout << "send message " << "Hello client" << std::endl;
+        std:: cout << "send message " << self->mMessage << std::endl;
     });
 
 
@@ -85,35 +87,7 @@ int main() {
     boost::asio::io_context io;
     TcpServer server(io);
     io.run();
-    std::this_thread::sleep_for(std::chrono::seconds(10));
-    //// 1. Create an acceptor that listens on port 5555
-    //tcp::acceptor acceptor(io, tcp::endpoint(tcp::v4(), 5555));
-
-    //std::cout << "Server listening on port 5555...\n";
-
-    //// 2. Wait for a client to connect
-    //tcp::socket socket(io);
-    //acceptor.accept(socket);
-
-    //std::cout << "Client connected!\n";
-
-    //// 3. Receive data
-    //for (;;) {
-    //  char data[1024];
-    //  boost::system::error_code error;
-
-    //  size_t length = socket.read_some(boost::asio::buffer(data), error);
-
-    //  if (error == boost::asio::error::eof) {
-    //    std::cout << "Connection closed by client.\n";
-    //    break;
-    //  }
-    //  else if (error) {
-    //    throw boost::system::system_error(error);
-    //  }
-
-    //  std::cout << "Received: " << std::string(data, length) << "\n";
-    //}
+    std::this_thread::sleep_for(std::chrono::seconds(3));
   }
   catch (std::exception& e) {
     std::cerr << "Exception: " << e.what() << "\n";
