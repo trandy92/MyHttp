@@ -54,8 +54,8 @@ class TcpServer
 public:
   TcpServer() : mAcceptor(mIoContext, tcp::endpoint(tcp::v4(), 5555))
   {
-    mServingThread = std::thread([this]() { startAccept(); });
-    mIoContext.run();
+    startAccept();
+    mServingThread = std::thread([this]() { mIoContext.run(); });
   }
   void startAccept()
   {
@@ -85,6 +85,7 @@ public:
     while (!mIncomingMessages.empty())
     {
       lastMessages.emplace_back(std::move(mIncomingMessages.front()));
+      mIncomingMessages.pop();
     }
     return lastMessages;
   }
