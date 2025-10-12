@@ -4,6 +4,8 @@
 
 using boost::asio::ip::tcp;
 
+
+
 class TcpConnection : public std::enable_shared_from_this<TcpConnection>
 {
 public:
@@ -29,7 +31,6 @@ public:
           std::getline(is, line);
           std::cout << line << std::endl;
     });
-
 
     mMessage = "Hello server!\n";
     boost::asio::async_write(mSocket, boost::asio::buffer(mMessage),
