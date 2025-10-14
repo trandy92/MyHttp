@@ -13,9 +13,12 @@ int main()
     boost::asio::io_context io;
     auto tcpConnection = TcpConnection::create(io);
     tcpConnection->connect();
-    tcpConnection->listenForIncomingMessages([](const std::string& msg)
-                                             { std::cout << "[Received] " << msg << std::endl; });
-    // io.run();
+    tcpConnection->listenForIncomingMessages(
+        [](const std::string& msg)
+        {
+          auto x = msg;
+          std::cout << "[Incoming] " << msg << std::endl;
+        });
     std::jthread ioThread([&]() { io.run(); });
 
     while (true)
@@ -23,6 +26,8 @@ int main()
       std::cout << "Enter a message" << std::endl;
       std::string msg;
       std::getline(std::cin, msg);
+
+      std::cout << "[Outgoing]" << msg << std::endl;
       tcpConnection->writeMessage(msg + '\n');
     }
   }

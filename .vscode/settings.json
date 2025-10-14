@@ -86,6 +86,8 @@
     "xtree": "cpp",
     "xutility": "cpp",
     "fstream": "cpp",
-    "queue": "cpp"
+    "queue": "cpp",
+    "deque": "cpp",
+    "ranges": "cpp"
   }
 }

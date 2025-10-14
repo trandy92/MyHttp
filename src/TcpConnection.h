@@ -25,7 +25,7 @@ public:
                                     std::istream is(&self->mIncomingMessage);
                                     std::string line;
                                     std::getline(is, line);
-                                    std::cout << line << std::endl;
+                                    // std::cout << line << std::endl;
                                     self->mIncomingMessage.consume(bytesTransferred);
                                     msgHandler(line);
                                     self->listenForIncomingMessages(msgHandler);
@@ -45,7 +45,6 @@ public:
                                if (!ec)
                                {
                                  self->mOutBuffer.consume(bytesTransferred);
-                                 std::cout << "send message " << std::endl;
                                }
                              });
   }

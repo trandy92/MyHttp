@@ -78,7 +78,7 @@ class HttpServer
 {
 public:
   HttpServer() {}
-  void write(std::string& msg) { mTcpServer.write(msg); }
+  void write(const std::string& msg) { mTcpServer.write(msg); }
   void listenForIncomingMessage()
   {
     while (true)
@@ -86,7 +86,7 @@ public:
       auto msgs = mTcpServer.getLastMessages();
       for (auto msg : msgs)
       {
-        std::cout << "[Incoming Message]" << msg << std::endl;
+        std::cout << "[Incoming] " << msg << std::endl;
       }
       std::this_thread::sleep_for(std::chrono::milliseconds(200));
     }
@@ -108,7 +108,8 @@ int main()
     {
       std::string line;
       std::getline(std::cin, line);
-      httpServer.write(line);
+      std::cout << "[Outgoing] " << line << std::endl;
+      httpServer.write(line + '\n');
     }
   }
   catch (std::exception& e)
