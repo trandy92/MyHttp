@@ -3,50 +3,12 @@
 #include <queue>
 #include <mutex>
 
+#include "TcpConnection.h"
+
 using boost::asio::ip::tcp;
 
 struct HttpGetRequest
 {
-};
-
-class TcpConnection : public std::enable_shared_from_this<TcpConnection>
-{
-public:
-  typedef std::shared_ptr<TcpConnection> pointer;
-
-  static pointer create(boost::asio::io_context& ioContext) { return pointer(new TcpConnection(ioContext)); }
-
-  tcp::socket& socket() { return mSocket; }
-
-  void listenForIncomingMessages(std::function<void(const std::string&)> msgHandler)
-  {
-    auto self = shared_from_this();
-    boost::asio::async_read_until(mSocket,
-                                  mIncomingMessage,
-                                  '\n',
-                                  [self, msgHandler](const boost::system::error_code& ec, std::size_t bytesTransferred)
-                                  {
-                                    std::istream is(&self->mIncomingMessage);
-                                    std::string line;
-                                    std::getline(is, line);
-                                    std::cout << line << std::endl;
-                                    msgHandler(line);
-                                  });
-
-    // mMessage = "Hello client!\n";
-
-    // boost::asio::async_write(mSocket,
-    //                          boost::asio::buffer(mMessage),
-    //                          [self](const boost::system::error_code& ec, std::size_t bytesTransferred)
-    //                          { std::cout << "send message " << self->mMessage << std::endl; });
-  }
-
-private:
-  TcpConnection(boost::asio::io_context& ioContext) : mSocket(ioContext) {}
-
-  tcp::socket mSocket;
-  std::string mMessage;
-  boost::asio::streambuf mIncomingMessage;
 };
 
 class TcpServer
@@ -57,10 +19,19 @@ public:
     startAccept();
     mServingThread = std::thread([this]() { mIoContext.run(); });
   }
+
+  void write(const std::string& msg)
+  {
+    for (auto conn : mConnections)
+    {
+      conn->writeMessage(msg);
+    }
+  }
+
   void startAccept()
   {
     TcpConnection::pointer newConnection = TcpConnection::create(mIoContext);
-    mConnection.push_back(newConnection);
+    mConnections.push_back(newConnection);
     auto handleAccept = [this, newConnection](const boost::system::error_code& error)
     {
       if (!error)
@@ -95,7 +66,7 @@ private:
   std::mutex mMutex;
   boost::asio::io_context mIoContext;
   tcp::acceptor mAcceptor;
-  std::vector<TcpConnection::pointer> mConnection;
+  std::vector<TcpConnection::pointer> mConnections;
   std::queue<std::string> mIncomingMessages;
 };
 
@@ -107,7 +78,8 @@ class HttpServer
 {
 public:
   HttpServer() {}
-  void serve()
+  void write(std::string& msg) { mTcpServer.write(msg); }
+  void listenForIncomingMessage()
   {
     while (true)
     {
@@ -130,8 +102,14 @@ int main()
   try
   {
     HttpServer httpServer;
-    httpServer.serve();
-    std::this_thread::sleep_for(std::chrono::seconds(3));
+    std::jthread httpThread([&]() { httpServer.listenForIncomingMessage(); });
+    std::cout << "Enter messages: \n";
+    while (true)
+    {
+      std::string line;
+      std::getline(std::cin, line);
+      httpServer.write(line);
+    }
   }
   catch (std::exception& e)
   {

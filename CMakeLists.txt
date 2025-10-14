@@ -10,8 +10,8 @@ list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/generators")
 
 find_package(Boost REQUIRED CONFIG)
 
-add_executable(simple_http_server src/main_server.cpp)
-add_executable(simple_http_client src/main_client.cpp)
+add_executable(simple_http_server src/main_server.cpp src/TcpConnection.h)
+add_executable(simple_http_client src/main_client.cpp src/TcpConnection.h)
 
 target_include_directories(simple_http_server
     PRIVATE
