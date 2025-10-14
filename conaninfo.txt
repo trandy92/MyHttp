@@ -8,6 +8,7 @@
 
 [requires]
     boost/1.Y.Z
+    gtest/1.Y.Z
 
 [options]
 
@@ -25,6 +26,7 @@
 [full_requires]
     boost/1.83.0:c16d614bb966cd4b029ded7ef4fdc14b694dd24c
     bzip2/1.0.8:d74f69022acf854c1ce6f27efa07ccbb6504e4b1
+    gtest/1.12.1:311ead3d41800dc0d53bbfabef664be019d1e3be
     zlib/1.3.1:164640aad040835ac89882393a96d89200694f04
 
 [full_options]
@@ -93,6 +95,11 @@
     boost:zstd=False
     bzip2:build_executable=True
     bzip2:shared=False
+    gtest:build_gmock=True
+    gtest:debug_postfix=d
+    gtest:hide_symbols=False
+    gtest:no_main=False
+    gtest:shared=False
     zlib:shared=False
 
 [recipe_hash]

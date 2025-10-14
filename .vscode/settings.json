@@ -89,5 +89,8 @@
     "queue": "cpp",
     "deque": "cpp",
     "ranges": "cpp"
-  }
+  },
+  "cmake.configureOnOpen": true,
+  "cmake.ctest.testExplorerIntegrationEnabled": true,
+  "cmake.ctestArgs": ["--output-on-failure"]
 }

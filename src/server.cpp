@@ -7,20 +7,7 @@
 
 using boost::asio::ip::tcp;
 
-enum class Method
-{
-  Get,
-  Post,
-  Put,
-  Update
-};
-
-struct HttpGetRequest
-{
-  Method method;
-};
-
-class TcpServer // : public std::enable_shared_from_this<TcpServer>
+class TcpServer
 {
 public:
   TcpServer() : mAcceptor(mIoContext, tcp::endpoint(tcp::v4(), 5555))
@@ -76,8 +63,6 @@ private:
 
 // using HttpRequest
 
-using HttpGetRequests = std::queue<HttpGetRequest>;
-
 class HttpServer
 {
 public:
@@ -89,7 +74,6 @@ public:
 
 private:
   TcpServer mTcpServer;
-  HttpGetRequests mGetRequests;
 };
 
 int main()

@@ -1,25 +1,42 @@
 cmake_minimum_required(VERSION 3.21)
-project(SimpleHttpServer LANGUAGES CXX)
+project(MyHttp LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Conan setup
-# include(${CMAKE_BINARY_DIR}/conan_toolchain.cmake OPTIONAL)
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/generators")
 
 find_package(Boost REQUIRED CONFIG)
+find_package(GTest REQUIRED CONFIG)
 
-add_executable(simple_http_server src/main_server.cpp src/TcpConnection.h)
-add_executable(simple_http_client src/main_client.cpp src/TcpConnection.h)
+enable_testing()
+add_executable(MyHttpTests test/HttpRequestFactoryTests.cpp)
+target_link_libraries(MyHttpTests GTest::gtest_main)
+add_test(NAME MyHttpTests COMMAND MyHttpTests)
 
+add_library(MyHttp src/MyHttpLib/include/TcpConnection.h src/MyHttpLib/include/HttpRequestFactory.h src/MyHttpLib/src/TcpConnection.cpp)
+
+add_executable(simple_http_server src/server.cpp)
+add_executable(simple_http_client src/client.cpp)
+
+
+target_include_directories(MyHttp
+    PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/MyHttpLib/include
+    PRIVATE
+    ${Boost_INCLUDE_DIRS}
+)
 target_include_directories(simple_http_server
     PRIVATE
     ${Boost_INCLUDE_DIRS}
 )
-target_link_libraries(simple_http_server PRIVATE Boost::boost Boost::filesystem)
 target_include_directories(simple_http_client
     PRIVATE
     ${Boost_INCLUDE_DIRS}
 )
-target_link_libraries(simple_http_client PRIVATE Boost::boost)
+
+target_link_libraries(MyHttp PRIVATE Boost::boost Boost::filesystem)
+target_link_libraries(simple_http_server PUBLIC MyHttp 
+                                         PRIVATE Boost::boost Boost::filesystem)
+target_link_libraries(simple_http_client PUBLIC MyHttp
+                                         PRIVATE Boost::boost)
