@@ -11,7 +11,6 @@ find_package(GTest REQUIRED CONFIG)
 
 enable_testing()
 add_executable(MyHttpTests test/HttpRequestFactoryTests.cpp)
-target_link_libraries(MyHttpTests GTest::gtest_main)
 add_test(NAME MyHttpTests COMMAND MyHttpTests)
 
 add_library(MyHttp src/MyHttpLib/include/TcpConnection.h src/MyHttpLib/include/HttpRequestFactory.h src/MyHttpLib/src/TcpConnection.cpp)
@@ -40,3 +39,5 @@ target_link_libraries(simple_http_server PUBLIC MyHttp
                                          PRIVATE Boost::boost Boost::filesystem)
 target_link_libraries(simple_http_client PUBLIC MyHttp
                                          PRIVATE Boost::boost)
+
+target_link_libraries(MyHttpTests PUBLIC MyHttp PRIVATE GTest::gtest_main)

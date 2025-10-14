@@ -36,4 +36,6 @@ struct HttpRequest
 
 HttpRequest ParseRequest(const std::string& message)
 {
+  HttpRequest req{.method = Method::Get, .resource = ""};
+  return req;
 }
