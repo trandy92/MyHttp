@@ -7,11 +7,20 @@
 
 using boost::asio::ip::tcp;
 
-struct HttpGetRequest
+enum class Method
 {
+  Get,
+  Post,
+  Put,
+  Update
 };
 
-class TcpServer
+struct HttpGetRequest
+{
+  Method method;
+};
+
+class TcpServer // : public std::enable_shared_from_this<TcpServer>
 {
 public:
   TcpServer() : mAcceptor(mIoContext, tcp::endpoint(tcp::v4(), 5555))
@@ -39,8 +48,10 @@ public:
         newConnection->listenForIncomingMessages(
             [&](const std::string& incomingMessage)
             {
-              std::lock_guard lock(mMutex);
-              mIncomingMessages.emplace(incomingMessage);
+              for (auto handler : mOnMessageHandlers)
+              {
+                handler(incomingMessage);
+              }
             });
       }
       startAccept();
@@ -48,17 +59,9 @@ public:
     mAcceptor.async_accept(newConnection->socket(), handleAccept);
   }
 
-  std::vector<std::string> getLastMessages()
+  void subscribeToMessages(std::function<void(const std::string& msg)> onMessageHandler)
   {
-    std::vector<std::string> lastMessages;
-    std::lock_guard lock(mMutex);
-    lastMessages.reserve(mIncomingMessages.size());
-    while (!mIncomingMessages.empty())
-    {
-      lastMessages.emplace_back(std::move(mIncomingMessages.front()));
-      mIncomingMessages.pop();
-    }
-    return lastMessages;
+    mOnMessageHandlers.push_back(onMessageHandler);
   }
 
 private:
@@ -68,6 +71,7 @@ private:
   tcp::acceptor mAcceptor;
   std::vector<TcpConnection::pointer> mConnections;
   std::queue<std::string> mIncomingMessages;
+  std::vector<std::function<void(const std::string& msg)>> mOnMessageHandlers;
 };
 
 // using HttpRequest
@@ -77,20 +81,11 @@ using HttpGetRequests = std::queue<HttpGetRequest>;
 class HttpServer
 {
 public:
-  HttpServer() {}
-  void write(const std::string& msg) { mTcpServer.write(msg); }
-  void listenForIncomingMessage()
+  HttpServer()
   {
-    while (true)
-    {
-      auto msgs = mTcpServer.getLastMessages();
-      for (auto msg : msgs)
-      {
-        std::cout << "[Incoming] " << msg << std::endl;
-      }
-      std::this_thread::sleep_for(std::chrono::milliseconds(200));
-    }
+    mTcpServer.subscribeToMessages([](const std::string& msg) { std::cout << "[Incoming] " << msg << std::endl; });
   }
+  void write(const std::string& msg) { mTcpServer.write(msg); }
 
 private:
   TcpServer mTcpServer;
@@ -102,7 +97,6 @@ int main()
   try
   {
     HttpServer httpServer;
-    std::jthread httpThread([&]() { httpServer.listenForIncomingMessage(); });
     std::cout << "Start chatting: \n";
     while (true)
     {
