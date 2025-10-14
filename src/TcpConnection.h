@@ -22,13 +22,16 @@ public:
                                   '\n',
                                   [self, msgHandler](const boost::system::error_code& ec, std::size_t bytesTransferred)
                                   {
-                                    std::istream is(&self->mIncomingMessage);
-                                    std::string line;
-                                    std::getline(is, line);
-                                    // std::cout << line << std::endl;
-                                    self->mIncomingMessage.consume(bytesTransferred);
-                                    msgHandler(line);
-                                    self->listenForIncomingMessages(msgHandler);
+                                    if (!ec && self->mSocket.is_open())
+                                    {
+                                      std::istream is(&self->mIncomingMessage);
+                                      std::string line;
+                                      std::getline(is, line);
+                                      // std::cout << line << std::endl;
+                                      self->mIncomingMessage.consume(bytesTransferred);
+                                      msgHandler(line);
+                                      self->listenForIncomingMessages(msgHandler);
+                                    }
                                   });
   }
 

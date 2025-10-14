@@ -21,9 +21,9 @@ int main()
         });
     std::jthread ioThread([&]() { io.run(); });
 
+    std::cout << "Start chatting" << std::endl;
     while (true)
     {
-      std::cout << "Enter a message" << std::endl;
       std::string msg;
       std::getline(std::cin, msg);
 

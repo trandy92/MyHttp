@@ -103,7 +103,7 @@ int main()
   {
     HttpServer httpServer;
     std::jthread httpThread([&]() { httpServer.listenForIncomingMessage(); });
-    std::cout << "Enter messages: \n";
+    std::cout << "Start chatting: \n";
     while (true)
     {
       std::string line;
