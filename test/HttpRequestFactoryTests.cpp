@@ -1,9 +1,9 @@
+#include <cstddef>
 #include <gtest/gtest.h>
 #include "HttpRequestFactory.h"
 #include "Utils.h"
 
-constexpr auto exampleGetRequest = R"(
-GET / HTTP/1.1
+constexpr auto exampleGetRequest = R"(GET / HTTP/1.1
 Host: localhost:5555
 Connection: keep-alive
 sec-ch-ua: "Google Chrome";v="141", "Not?A_Brand";v="8", "Chromium";v="141"
@@ -20,6 +20,8 @@ Accept-Encoding: gzip, deflate, br, zstd
 Accept-Language: de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7
 Cookie: com.wibu.cm.webadmin.lang=de-DE
 )";
+
+using namespace MyHttp;
 
 TEST(HttpRequestFactory, DoesSomethingCorrect)
 {

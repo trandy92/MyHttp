@@ -3,6 +3,8 @@
 
 #include "TcpConnection.h"
 
+using namespace MyHttp;
+
 int main()
 {
   try

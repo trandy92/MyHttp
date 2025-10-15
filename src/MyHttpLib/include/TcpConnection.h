@@ -3,27 +3,30 @@
 
 #include <boost/asio.hpp>
 
-using boost::asio::ip::tcp;
-
-class TcpConnection : public std::enable_shared_from_this<TcpConnection>
+namespace MyHttp
 {
-public:
-  typedef std::shared_ptr<TcpConnection> pointer;
+  using boost::asio::ip::tcp;
 
-  static pointer create(boost::asio::io_context& ioContext) { return pointer(new TcpConnection(ioContext)); }
+  class TcpConnection : public std::enable_shared_from_this<TcpConnection>
+  {
+  public:
+    typedef std::shared_ptr<TcpConnection> pointer;
 
-  tcp::socket& socket() { return mSocket; }
+    static pointer create(boost::asio::io_context& ioContext) { return pointer(new TcpConnection(ioContext)); }
 
-  void listenForIncomingMessages(std::function<void(const std::string&)> msgHandler);
+    tcp::socket& socket() { return mSocket; }
 
-  void writeMessage(const std::string& message);
+    void listenForIncomingMessages(std::function<void(const std::string&)> msgHandler);
 
-  void connect();
+    void writeMessage(const std::string& message);
 
-private:
-  TcpConnection(boost::asio::io_context& ioContext) : mSocket(ioContext) {}
+    void connect();
 
-  boost::asio::streambuf mOutBuffer;
-  tcp::socket mSocket;
-  boost::asio::streambuf mIncomingMessage;
-};
+  private:
+    TcpConnection(boost::asio::io_context& ioContext) : mSocket(ioContext) {}
+
+    boost::asio::streambuf mOutBuffer;
+    tcp::socket mSocket;
+    boost::asio::streambuf mIncomingMessage;
+  };
+} // namespace MyHttp

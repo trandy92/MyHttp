@@ -2,43 +2,47 @@
 #include <variant>
 #include <string>
 
-enum class ProtocolVersion
+namespace MyHttp
 {
-  Version_1_1
-};
 
-enum class Method
-{
-  Get,
-  Post,
-  Put,
-  Update
-};
+  enum class ProtocolVersion
+  {
+    Version_1_1
+  };
 
-enum class StatusCode
-{
-  c_200,
-};
+  enum class Method
+  {
+    Get,
+    Post,
+    Put,
+    Update
+  };
 
-using Resource = std::string;
+  enum class StatusCode
+  {
+    c_200,
+  };
 
-struct HttpResponse
-{
-  ProtocolVersion version;
-  StatusCode statusCode;
-};
+  using Resource = std::string;
 
-struct HttpRequestParseError
-{
-};
+  struct HttpResponse
+  {
+    ProtocolVersion version;
+    StatusCode statusCode;
+  };
 
-struct HttpRequest
-{
-  Method method;
-  Resource resource;
-  ProtocolVersion version;
-};
+  struct HttpRequestParseError
+  {
+  };
 
-using HttpRequestParseResult = std::variant<HttpRequest, HttpRequestParseError>;
+  struct HttpRequest
+  {
+    Method method;
+    Resource resource;
+    ProtocolVersion version;
+  };
 
-HttpRequestParseResult ParseRequest(const std::string& message);
+  using HttpRequestParseResult = std::variant<HttpRequest, HttpRequestParseError>;
+
+  HttpRequestParseResult ParseRequest(const std::string& message);
+} // namespace MyHttp
