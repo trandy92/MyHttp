@@ -25,6 +25,17 @@
         "cwd": "${fileDirname}",
         "environment": [],
         "console": "integratedTerminal"
+    },
+     {
+        "name": "Launch Tests",
+        "type": "cppvsdbg",
+        "request": "launch",
+        "program": "${workspaceFolder}/build/MyHttpTests.exe",
+        "args": [],
+        "stopAtEntry": false,
+        "cwd": "${fileDirname}",
+        "environment": [],
+        "console": "integratedTerminal"
     }
     ],
     "compounds": [

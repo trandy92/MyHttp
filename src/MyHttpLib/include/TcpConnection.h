@@ -21,17 +21,16 @@ public:
     auto self = shared_from_this();
     boost::asio::async_read_until(mSocket,
                                   mIncomingMessage,
-                                  '\n',
+                                  "\r\n\r\n",
                                   [self, msgHandler](const boost::system::error_code& ec, std::size_t bytesTransferred)
                                   {
                                     if (!ec && self->mSocket.is_open())
                                     {
                                       std::istream is(&self->mIncomingMessage);
-                                      std::string line;
-                                      std::getline(is, line);
-                                      // std::cout << line << std::endl;
+                                      std::string header("\0", bytesTransferred);
+                                      is.read(&header[0], bytesTransferred);
                                       self->mIncomingMessage.consume(bytesTransferred);
-                                      msgHandler(line);
+                                      msgHandler(header);
                                       self->listenForIncomingMessages(msgHandler);
                                     }
                                   });
