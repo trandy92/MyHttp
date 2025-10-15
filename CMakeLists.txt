@@ -13,7 +13,7 @@ enable_testing()
 add_executable(MyHttpTests test/HttpRequestFactoryTests.cpp)
 add_test(NAME MyHttpTests COMMAND MyHttpTests)
 
-add_library(MyHttp src/MyHttpLib/include/TcpConnection.h src/MyHttpLib/include/HttpRequestFactory.h src/MyHttpLib/src/TcpConnection.cpp)
+add_library(MyHttp src/MyHttpLib/include/TcpConnection.h src/MyHttpLib/include/HttpRequestFactory.h src/MyHttpLib/src/TcpConnection.cpp src/MyHttpLib/src/HttpRequestFactory.cpp)
 
 add_executable(simple_http_server src/server.cpp)
 add_executable(simple_http_client src/client.cpp)

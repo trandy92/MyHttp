@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "HttpRequestFactory.h"
+#include "Utils.h"
 
 constexpr auto exampleGetRequest = R"(
 GET / HTTP/1.1
