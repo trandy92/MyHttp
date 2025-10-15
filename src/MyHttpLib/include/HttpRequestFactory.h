@@ -1,7 +1,9 @@
 #pragma once
+#include <sstream>
 #include <string>
 #include <istream>
 #include <iostream>
+#include <unordered_map>
 #include <variant>
 #include <regex>
 #include <optional>

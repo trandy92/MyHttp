@@ -2,8 +2,8 @@
     "version": 8,
     "configurePresets": [
         {
-            "name": "Configure preset using toolchain file",
-            "displayName": "Configure preset using toolchain file",
+            "name": "MyDebugPreset",
+            "displayName": "MyDebugPreset",
             "description": "Sets Ninja generator, build and install directory",
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build/",
@@ -11,7 +11,8 @@
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_C_COMPILER": "cl.exe",
                 "CMAKE_CXX_COMPILER": "cl.exe",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/${presetName}"
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/${presetName}",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
             }
         }
     ]

@@ -1,5 +1,4 @@
 #include <iostream>
-#include <fstream>
 #include <boost/asio.hpp>
 
 #include "TcpConnection.h"
