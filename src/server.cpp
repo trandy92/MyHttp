@@ -7,6 +7,7 @@
 #include "HttpRequestFactory.h"
 #include "MyHttpLib/include/Utils.h"
 #include "TcpConnection.h"
+#include "ResourceManager.h"
 
 namespace MyHttp
 {
@@ -62,8 +63,8 @@ namespace MyHttp
     std::mutex mMutex;
     boost::asio::io_context mIoContext;
     tcp::acceptor mAcceptor;
+    
     std::vector<TcpConnection::pointer> mConnections;
-    std::queue<std::string> mIncomingMessages;
     std::vector<std::function<void(const std::string& msg)>> mOnMessageHandlers;
   };
 
@@ -98,6 +99,7 @@ namespace MyHttp
                   {
                   case Method::Get:
                   {
+                     
                     // request.resource
                   }
                   break;
@@ -118,6 +120,7 @@ namespace MyHttp
 
   private:
     TcpServer mTcpServer;
+    ResourceManager mResourceManager;
   };
 } // namespace MyHttp
 
