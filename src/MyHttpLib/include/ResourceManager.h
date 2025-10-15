@@ -1,23 +1,44 @@
 #pragma once
 
-namespace MyHttp{
+#include <string>
+#include <variant>
+#include <filesystem>
 
-using Resource = std::string;
-struct ResourceLoadError
+namespace MyHttp
 {
+  namespace fs = std::filesystem;
+
+  struct Resource
+  {
+    std::string content;
+    fs::path path;
+  };
+
+  struct ResourceConfig
+  {
+    std::filesystem::path resourcesDir;
+  };
+  struct ResourceLoadError
+  {
     std::string errorMessage;
-}
-using ResourceLoadResult = std::variant<Resource, ResourceLoadError>;
+  };
+  using ResourceLoadResult = std::variant<Resource, ResourceLoadError>;
 
-class IResourceManager:
-{
-    public:
-    virtual IResourceManager = default;
-    virtual ResourceLoadResult LoadResource() = 0;
-}
+  class IResourceManager
+  {
+  public:
+    IResourceManager() = default;
+    virtual ~IResourceManager() = default;
+    virtual ResourceLoadResult LoadResource(std::string resource) = 0;
+  };
 
-class ResourceManager : public IResourceManager
-{
+  class ResourceManager : public IResourceManager
+  {
+  public:
+    ResourceManager(ResourceConfig config) : mConfig(std::move(config)) {}
+    ResourceLoadResult LoadResource(std::string resource) override;
 
-}
-}
+  private:
+    ResourceConfig mConfig;
+  };
+} // namespace MyHttp

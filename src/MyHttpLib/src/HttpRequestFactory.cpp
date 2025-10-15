@@ -43,15 +43,13 @@ namespace MyHttp
     std::smatch match;
     if (!std::regex_match(line, match, headerFirstLineRegEx))
     {
-      HttpRequestParseError err;
-      return err;
+      return HttpRequestParseError{};
     }
     auto method = ConvertMethodString(match[1]);
     auto version = ConvertVersionString(match[3]);
     if (!method.has_value() || !version.has_value())
     {
-      HttpRequestParseError err;
-      return err;
+      return HttpRequestParseError{};
     }
     HttpRequest req{.method = method.value(), .resource = match[2], .version = version.value()};
     return req;

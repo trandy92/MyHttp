@@ -14,12 +14,16 @@ add_executable(MyHttpTests test/HttpRequestFactoryTests.cpp)
 add_test(NAME MyHttpTests COMMAND MyHttpTests)
 
 add_library(MyHttp src/MyHttpLib/include/TcpConnection.h src/MyHttpLib/include/HttpRequestFactory.h src/MyHttpLib/src/TcpConnection.cpp src/MyHttpLib/src/HttpRequestFactory.cpp
-            src/MyHttpLib/include/ResourceManager.h src/MyHttpLib/src/ResourceManager.cpp)
+            src/MyHttpLib/include/ResourceManager.h src/MyHttpLib/src/ResourceManager.cpp src/MyHttpLib/src/HttpServer.cpp src/MyHttpLib/src/TcpServer.cpp)
 
 add_executable(simple_http_server src/server.cpp)
 add_executable(simple_http_client src/client.cpp)
 
 
+target_include_directories(MyHttpTests
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/MyHttpLib/src
+)
 target_include_directories(MyHttp
     PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/src/MyHttpLib/include

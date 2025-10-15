@@ -25,8 +25,6 @@ namespace MyHttp
     c_200,
   };
 
-  using Resource = std::string;
-
   struct HttpResponse
   {
     ProtocolVersion version;
@@ -40,7 +38,7 @@ namespace MyHttp
   struct HttpRequest
   {
     Method method;
-    Resource resource;
+    std::string resource;
     ProtocolVersion version;
   };
 
