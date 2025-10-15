@@ -3,6 +3,7 @@
 #include <queue>
 #include <mutex>
 
+#include "MyHttpLib/include/Utils.h"
 #include "TcpConnection.h"
 
 using boost::asio::ip::tcp;
@@ -13,7 +14,8 @@ public:
   TcpServer() : mAcceptor(mIoContext, tcp::endpoint(tcp::v4(), 5555))
   {
     startAccept();
-    mServingThread = std::thread([this]() { mIoContext.run(); });
+
+    mServingFuture = runReallyAsync([this]() { mIoContext.run(); });
   }
 
   void write(const std::string& msg)
@@ -52,7 +54,7 @@ public:
   }
 
 private:
-  std::thread mServingThread;
+  std::future<void> mServingFuture;
   std::mutex mMutex;
   boost::asio::io_context mIoContext;
   tcp::acceptor mAcceptor;
@@ -87,7 +89,7 @@ int main()
       std::string line;
       std::getline(std::cin, line);
       std::cout << "[Outgoing] " << line << std::endl;
-      httpServer.write(line + '\n');
+      httpServer.write(line + "\r\n\r\n");
     }
   }
   catch (std::exception& e)

@@ -1,7 +1,16 @@
 #pragma once
 
+#include <future>
+#include <utility>
 #include <variant>
 
+template<typename F, typename... T>
+auto runReallyAsync(F&& function, T&&... params)
+{
+  return std::async(std::launch::async, std::forward<F>(function), std::forward<T>(params)...);
+}
+
+// For Generic Visitor pattern
 template<class... Ts>
 struct overloaded : Ts...
 {
