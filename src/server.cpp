@@ -2,7 +2,9 @@
 #include <boost/asio.hpp>
 #include <queue>
 #include <mutex>
+#include <stdexcept>
 
+#include "HttpRequestFactory.h"
 #include "MyHttpLib/include/Utils.h"
 #include "TcpConnection.h"
 
@@ -15,9 +17,9 @@ namespace MyHttp
   public:
     TcpServer() : mAcceptor(mIoContext, tcp::endpoint(tcp::v4(), 5555))
     {
-      startAccept();
+      StartAccept();
 
-      mServingFuture = runReallyAsync([this]() { mIoContext.run(); });
+      mServingFuture = RunReallyAsync([this]() { mIoContext.run(); });
     }
 
     void write(const std::string& msg)
@@ -28,7 +30,7 @@ namespace MyHttp
       }
     }
 
-    void startAccept()
+    void StartAccept()
     {
       TcpConnection::pointer newConnection = TcpConnection::create(mIoContext);
       mConnections.push_back(newConnection);
@@ -45,12 +47,12 @@ namespace MyHttp
                 }
               });
         }
-        startAccept();
+        StartAccept();
       };
       mAcceptor.async_accept(newConnection->socket(), handleAccept);
     }
 
-    void subscribeToMessages(std::function<void(const std::string& msg)> onMessageHandler)
+    void SubscribeToMessages(std::function<void(const std::string& msg)> onMessageHandler)
     {
       mOnMessageHandlers.push_back(onMessageHandler);
     }
@@ -72,9 +74,47 @@ namespace MyHttp
   public:
     HttpServer()
     {
-      mTcpServer.subscribeToMessages([](const std::string& msg) { std::cout << "[Incoming] " << msg << std::endl; });
+      mTcpServer.SubscribeToMessages([](const std::string& msg) { std::cout << "[Incoming] " << msg << std::endl; });
+      mTcpServer.SubscribeToMessages(
+          [](const std::string& msg)
+          {
+            auto request = ParseRequest(msg);
+            GenericVisit(
+                request,
+                [](HttpRequest request)
+                {
+                  static_assert(static_cast<int>(ProtocolVersion::kNoEntries) == 1);
+                  switch (request.version)
+                  {
+                  case ProtocolVersion::Version_1_1:
+                    break;
+                  default:
+                    throw std::invalid_argument("Http Protocol Version is not yet supported.");
+                    break;
+                  }
+
+                  static_assert(static_cast<int>(Method::kNoEntries) == 4);
+                  switch (request.method)
+                  {
+                  case Method::Get:
+                  {
+                    // request.resource
+                  }
+                  break;
+                  case Method::Post:
+                    break;
+                  case Method::Put:
+                    break;
+                  case Method::Update:
+                    break;
+                  case Method::kNoEntries:
+                    throw std::invalid_argument("This should not happen.");
+                  }
+                },
+                [](HttpRequestParseError err) { std::cerr << "Failed to parse Http Request" << std::endl; });
+          });
     }
-    void write(const std::string& msg) { mTcpServer.write(msg); }
+    void Write(const std::string& msg) { mTcpServer.write(msg); }
 
   private:
     TcpServer mTcpServer;
@@ -94,7 +134,7 @@ int main()
       std::string line;
       std::getline(std::cin, line);
       std::cout << "[Outgoing] " << line << std::endl;
-      httpServer.write(line + "\r\n\r\n");
+      httpServer.Write(line + "\r\n\r\n");
     }
   }
   catch (std::exception& e)

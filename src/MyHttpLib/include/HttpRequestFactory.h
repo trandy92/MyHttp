@@ -7,7 +7,8 @@ namespace MyHttp
 
   enum class ProtocolVersion
   {
-    Version_1_1
+    Version_1_1,
+    kNoEntries
   };
 
   enum class Method
@@ -15,7 +16,8 @@ namespace MyHttp
     Get,
     Post,
     Put,
-    Update
+    Update,
+    kNoEntries
   };
 
   enum class StatusCode

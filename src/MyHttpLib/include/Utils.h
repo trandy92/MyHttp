@@ -5,7 +5,7 @@
 #include <variant>
 
 template<typename F, typename... T>
-auto runReallyAsync(F&& function, T&&... params)
+auto RunReallyAsync(F&& function, T&&... params)
 {
   return std::async(std::launch::async, std::forward<F>(function), std::forward<T>(params)...);
 }

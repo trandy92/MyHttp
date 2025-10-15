@@ -8,7 +8,6 @@
 
 namespace MyHttp
 {
-
   std::optional<ProtocolVersion> ConvertVersionString(std::string version);
 
   std::optional<Method> ConvertMethodString(std::string method);

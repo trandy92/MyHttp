@@ -93,7 +93,7 @@
   "cmake.configureOnOpen": true,
   "cmake.ctest.testExplorerIntegrationEnabled": true,
   "cmake.ctestArgs": ["--output-on-failure"],
-  "clangd.path": "clangd",  // path to clangd.exe
+  "clangd.path": "C:/Users/areichel/AppData/Roaming/Code/User/globalStorage/llvm-vs-code-extensions.vscode-clangd/install/21.1.0/clangd_21.1.0/bin/clangd.exe",  // path to clangd.exe
   "clangd.arguments": [
         "--clang-tidy",
         "--clang-tidy-checks=*",
