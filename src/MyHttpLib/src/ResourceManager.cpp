@@ -1,6 +1,5 @@
 #include "ResourceManager.h"
 #include "Utils.h"
-#include <memory>
 
 namespace MyHttp
 {
@@ -25,7 +24,4 @@ namespace MyHttp
   ResourceManager::ResourceManager(MyHttpFilesystem& fs, ResourceConfig config) : mConfig(std::move(config)), mFs(fs)
   {
   }
-  //   ResourceManager::ResourceManager(ResourceConfig config) : mConfig(std::move(config))
-  //   {
-  //   }
 } // namespace MyHttp
