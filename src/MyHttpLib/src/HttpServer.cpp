@@ -50,6 +50,6 @@ namespace MyHttp
   }
   void HttpServer::Write(const std::string& msg)
   {
-    mTcpServer.write(msg);
+    mTcpServer.Write(msg);
   }
 } // namespace MyHttp

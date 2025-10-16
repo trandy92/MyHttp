@@ -22,7 +22,7 @@ Cookie: com.wibu.cm.webadmin.lang=de-DE
 
 using namespace MyHttp;
 
-TEST(HttpRequestFactory, DoesSomethingCorrect)
+TEST(HttpRequestFactory, ParseRequest_Success)
 {
   auto request = ParseRequest(exampleGetRequest);
   GenericVisit(
@@ -34,4 +34,13 @@ TEST(HttpRequestFactory, DoesSomethingCorrect)
         EXPECT_EQ(res.version, ProtocolVersion::Version_1_1);
       },
       [](const HttpRequestParseError& res) { ASSERT_TRUE(false); });
+}
+
+TEST(HttpRequestFactory, ParseRequest_Failure)
+{
+  auto request = ParseRequest("some invalid\r\n\r\n");
+  GenericVisit(
+      request,
+      [](const HttpRequest& res) { ASSERT_TRUE(false); },
+      [](const HttpRequestParseError& res) { ASSERT_TRUE(true); });
 }

@@ -12,7 +12,7 @@ namespace MyHttp
   public:
     TcpServer();
 
-    void write(const std::string& msg);
+    void Write(const std::string& msg);
     void StartAccept();
     void SubscribeToMessages(std::function<void(const std::string& msg)> onMessageHandler);
 

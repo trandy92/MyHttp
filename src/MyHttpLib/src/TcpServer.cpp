@@ -12,7 +12,7 @@ namespace MyHttp
     mServingFuture = RunReallyAsync([this]() { mIoContext.run(); });
   }
 
-  void TcpServer::write(const std::string& msg)
+  void TcpServer::Write(const std::string& msg)
   {
     for (auto conn : mConnections)
     {

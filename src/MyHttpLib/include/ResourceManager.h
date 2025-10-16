@@ -16,7 +16,7 @@ namespace MyHttp
 
   struct ResourceConfig
   {
-    std::filesystem::path resourcesDir;
+    std::string resourcesDir;
   };
   struct ResourceLoadError
   {

@@ -3,25 +3,34 @@
 #include <future>
 #include <utility>
 #include <variant>
-
-template<typename F, typename... T>
-auto RunReallyAsync(F&& function, T&&... params)
+namespace MyHttp
 {
-  return std::async(std::launch::async, std::forward<F>(function), std::forward<T>(params)...);
-}
+  class MyHttpFilesystem
+  {
+  public:
+    virtual bool Exists(std::string path);
+    virtual std::string GetContent(std::string path);
+  };
 
-// For Generic Visitor pattern
-template<class... Ts>
-struct overloaded : Ts...
-{
-  using Ts::operator()...;
-};
+  template<typename F, typename... T>
+  auto RunReallyAsync(F&& function, T&&... params)
+  {
+    return std::async(std::launch::async, std::forward<F>(function), std::forward<T>(params)...);
+  }
 
-template<class... Ts>
-overloaded(Ts...) -> overloaded<Ts...>;
+  // For Generic Visitor pattern
+  template<class... Ts>
+  struct overloaded : Ts...
+  {
+    using Ts::operator()...;
+  };
 
-template<typename Variant, typename... Matchers>
-auto GenericVisit(Variant&& v, Matchers&&... m)
-{
-  return std::visit(overloaded{std::forward<Matchers>(m)...}, std::forward<Variant>(v));
-}
+  template<class... Ts>
+  overloaded(Ts...) -> overloaded<Ts...>;
+
+  template<typename Variant, typename... Matchers>
+  auto GenericVisit(Variant&& v, Matchers&&... m)
+  {
+    return std::visit(overloaded{std::forward<Matchers>(m)...}, std::forward<Variant>(v));
+  }
+} // namespace MyHttp
