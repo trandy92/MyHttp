@@ -10,7 +10,7 @@ find_package(Boost REQUIRED CONFIG)
 find_package(GTest REQUIRED CONFIG)
 
 enable_testing()
-add_executable(MyHttpTests test/HttpRequestFactoryTests.cpp)
+add_executable(MyHttpTests test/HttpRequestFactoryTests.cpp test/ResourceManagerTests.cpp)
 add_test(NAME MyHttpTests COMMAND MyHttpTests)
 
 add_library(MyHttp src/MyHttpLib/include/TcpConnection.h src/MyHttpLib/include/HttpRequestFactory.h src/MyHttpLib/src/TcpConnection.cpp src/MyHttpLib/src/HttpRequestFactory.cpp
@@ -45,4 +45,4 @@ target_link_libraries(simple_http_server PUBLIC MyHttp
 target_link_libraries(simple_http_client PUBLIC MyHttp
                                          PRIVATE Boost::boost)
 
-target_link_libraries(MyHttpTests PUBLIC MyHttp PRIVATE GTest::gtest_main)
+target_link_libraries(MyHttpTests PUBLIC MyHttp PRIVATE GTest::gtest_main GTest::gmock_main)

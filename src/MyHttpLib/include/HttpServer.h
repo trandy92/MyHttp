@@ -3,6 +3,7 @@
 #include <string>
 #include "ResourceManager.h"
 #include "TcpServer.h"
+#include "Utils.h"
 
 namespace MyHttp
 {
@@ -14,6 +15,7 @@ namespace MyHttp
 
   private:
     TcpServer mTcpServer;
-    ResourceManager mResourceManager{ResourceConfig{.resourcesDir = "D:/sandbox/myFolder"}};
+    ResourceManager mResourceManager{mFs, ResourceConfig{.resourcesDir = "D:/sandbox/myFolder"}};
+    MyHttpFilesystem mFs;
   };
 } // namespace MyHttp

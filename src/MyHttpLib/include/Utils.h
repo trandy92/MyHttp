@@ -8,8 +8,8 @@ namespace MyHttp
   class MyHttpFilesystem
   {
   public:
-    virtual bool Exists(std::string path);
-    virtual std::string GetContent(std::string path);
+    virtual bool Exists(std::string path) const;
+    virtual std::string GetContent(std::string path) const;
   };
 
   template<typename F, typename... T>

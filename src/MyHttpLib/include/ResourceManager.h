@@ -1,11 +1,13 @@
 #pragma once
 
+#include "Utils.h"
 #include <string>
 #include <variant>
 #include <filesystem>
 
 namespace MyHttp
 {
+  class MyHttpFilesystem;
   namespace fs = std::filesystem;
 
   struct Resource
@@ -35,10 +37,12 @@ namespace MyHttp
   class ResourceManager : public IResourceManager
   {
   public:
-    ResourceManager(ResourceConfig config) : mConfig(std::move(config)) {}
+    // ResourceManager(ResourceConfig config);
+    ResourceManager(MyHttpFilesystem& fs, ResourceConfig config);
     ResourceLoadResult LoadResource(std::string resource) override;
 
   private:
     ResourceConfig mConfig;
+    MyHttpFilesystem& mFs;
   };
 } // namespace MyHttp

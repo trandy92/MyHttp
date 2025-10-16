@@ -4,12 +4,12 @@
 
 namespace MyHttp
 {
-  bool MyHttpFilesystem::Exists(std::string path)
+  bool MyHttpFilesystem::Exists(std::string path) const
   {
     return std::filesystem::exists(path);
   }
 
-  std::string MyHttpFilesystem::GetContent(std::string path)
+  std::string MyHttpFilesystem::GetContent(std::string path) const
   {
     std::ifstream ifs(path);
     std::stringstream strstream;
