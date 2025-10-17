@@ -10,10 +10,12 @@ namespace MyHttp
     class Builder;
 
     StatusCode mStatusCode;
+    ReasonStr mReasonStr;
     ProtocolVersion mVersion;
     ContentType mType;
     ContentLength mContentLength;
     std::string mServerString;
+    Content mContent;
   };
   class HttpResponse::Builder
   {
@@ -26,6 +28,7 @@ namespace MyHttp
     Builder& ContentLength(ContentLength contentLength);
     Builder& Server();
     Builder& Type(ContentType type);
+    Builder& Content(Content type);
 
     HttpResponse Build();
 

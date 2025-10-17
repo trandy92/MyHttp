@@ -38,7 +38,15 @@ namespace MyHttp
                       resource,
                       [this](const Resource& res)
                       {
-                        auto response = HttpResponse::Builder{}.Status(StatusCode::c_200).Build();
+                        auto response = HttpResponse::Builder{}
+                                            .Server()
+                                            .ContentLength(res.content.size())
+                                            .Status(StatusCode::c_200)
+                                            .ReasonString("OK")
+                                            .Version(ProtocolVersion::Version_1_1)
+                                            .Type(ContentType::text_html)
+                                            .Content(res.content)
+                                            .Build();
                         // Write(response);
                       },
                       [](const ResourceLoadError& err)

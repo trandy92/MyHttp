@@ -4,8 +4,9 @@
 namespace MyHttp
 {
   using ContentLength = uint32_t;
+  using Content = std::string;
   using ReasonStr = std::string;
-  constexpr std::string_view Server = "MyHttp";
+  constexpr std::string_view ServerString = "MyHttp";
 
   enum class ProtocolVersion
   {

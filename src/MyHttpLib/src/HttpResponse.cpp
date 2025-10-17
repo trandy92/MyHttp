@@ -20,6 +20,22 @@ namespace MyHttp
     mResponse.mType = std::move(type);
     return *this;
   }
+  HttpResponse::Builder& HttpResponse::Builder::Content(::MyHttp::Content content)
+  {
+    mResponse.mContent = std::move(content);
+    return *this;
+  }
+  HttpResponse::Builder& HttpResponse::Builder::Server()
+  {
+    mResponse.mServerString = ServerString;
+    return *this;
+  }
+  HttpResponse::Builder& HttpResponse::Builder::ReasonString(ReasonStr reason)
+  {
+    mResponse.mReasonStr = std::move(reason);
+    return *this;
+  }
+
   HttpResponse::Builder& HttpResponse::Builder::ContentLength(::MyHttp::ContentLength contentLength)
   {
     mResponse.mContentLength = std::move(contentLength);
