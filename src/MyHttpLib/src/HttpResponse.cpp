@@ -8,21 +8,18 @@
 
 namespace MyHttp
 {
-  HttpResponse::Builder& HttpResponse::Builder::Status(StatusCode statusCode)
+
+  HttpResponse::Builder::Builder(ProtocolVersion version,
+                                 StatusCode statusCode,
+                                 ReasonStr reasonStr,
+                                 ContentType contentType)
   {
+    mResponse.mVersion = std::move(version);
     mResponse.mStatusCode = std::move(statusCode);
-    return *this;
+    mResponse.mReasonStr = std::move(reasonStr);
+    mResponse.mType = std::move(contentType);
   }
-  HttpResponse::Builder& HttpResponse::Builder::Version(ProtocolVersion protocolVersion)
-  {
-    mResponse.mVersion = std::move(protocolVersion);
-    return *this;
-  }
-  HttpResponse::Builder& HttpResponse::Builder::Type(ContentType type)
-  {
-    mResponse.mType = std::move(type);
-    return *this;
-  }
+
   HttpResponse::Builder& HttpResponse::Builder::Content(::MyHttp::Content content)
   {
     mResponse.mContent = std::move(content);
@@ -33,20 +30,10 @@ namespace MyHttp
     mResponse.mServerString = ServerString;
     return *this;
   }
-  HttpResponse::Builder& HttpResponse::Builder::ReasonString(ReasonStr reason)
-  {
-    mResponse.mReasonStr = std::move(reason);
-    return *this;
-  }
 
-  HttpResponse::Builder& HttpResponse::Builder::ContentLength(::MyHttp::ContentLength contentLength)
-  {
-    mResponse.mContentLength = std::move(contentLength);
-    return *this;
-  }
   HttpResponse HttpResponse::Builder::Build()
   {
-    return mResponse;
+    return std::move(mResponse);
   }
 
   std::string GetVersionString(const ProtocolVersion& version)
@@ -89,10 +76,22 @@ namespace MyHttp
   {
     std::stringstream response{};
     response << GetVersionString(mVersion) << " " << GetStatusCodeString(mStatusCode) << " " << mReasonStr << "\n"
-             << "Server: " << mServerString << "\n"
-             << "Content-Length: " << mContentLength << "\n"
-             << "Content-Type: " << GetContentTypeString(mType) << "\n\n"
-             << mContent;
+             << "Content-Type: " << GetContentTypeString(mType) << "\n";
+
+    if (mServerString.has_value())
+    {
+      response << "Server: " << *mServerString << "\n";
+    }
+    response << "Content-Length: ";
+    if (mContent.has_value())
+    {
+      response << mContent->length() << "\n\n" << mContent.value();
+    }
+    else
+    {
+      response << "0";
+    }
+
     return response.str();
   }
 

@@ -2,6 +2,7 @@
 #include "HttpServer.h"
 #include "HttpRequestFactory.h"
 #include "HttpResponse.h"
+#include "HttpTypes.h"
 #include "ResourceManager.h"
 #include "Utils.h"
 namespace MyHttp
@@ -38,17 +39,13 @@ namespace MyHttp
                       resource,
                       [this](const Resource& res)
                       {
-                        auto response = HttpResponse::Builder{}
-                                            .Server()
-                                            .Content(res.content)
-                                            .ContentLength(res.content.size())
-                                            .Status(StatusCode::c_200)
-                                            .ReasonString("OK")
-                                            .Version(ProtocolVersion::Version_1_1)
-                                            .Type(ContentType::text_html)
-                                            .Build();
-                        // Write(reason.toString());
-                        // Write(response);
+                        auto response =
+                            HttpResponse::Builder(
+                                ProtocolVersion::Version_1_1, StatusCode::c_200, "OK", ContentType::text_html)
+                                .Server()
+                                .Content(res.content)
+                                .Build();
+                        Write(response.toString());
                       },
                       [](const ResourceLoadError& err)
                       { std::cerr << "Failed with error " << err.errorMessage << std::endl; });

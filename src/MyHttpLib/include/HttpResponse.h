@@ -10,13 +10,12 @@ namespace MyHttp
   public:
     class Builder;
 
-    std::optional<StatusCode> mStatusCode;
+    StatusCode mStatusCode;
     ReasonStr mReasonStr;
     ProtocolVersion mVersion;
     ContentType mType;
-    ContentLength mContentLength;
-    std::string mServerString;
-    Content mContent;
+    std::optional<std::string> mServerString;
+    std::optional<Content> mContent;
 
     std::string toString();
 
@@ -26,14 +25,9 @@ namespace MyHttp
   class HttpResponse::Builder
   {
   public:
-    Builder() = default;
+    Builder(ProtocolVersion version, StatusCode statusCode, ReasonStr reasonStr, ContentType contentType);
 
-    Builder& Status(StatusCode statusCode);
-    Builder& ReasonString(ReasonStr reasonStr);
-    Builder& Version(ProtocolVersion protocolVersion);
-    Builder& ContentLength(ContentLength contentLength);
     Builder& Server();
-    Builder& Type(ContentType type);
     Builder& Content(Content type);
 
     HttpResponse Build();

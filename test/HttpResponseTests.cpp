@@ -4,28 +4,27 @@
 
 using namespace MyHttp;
 
-TEST(HttpResponseTests, EmptyResponse)
+TEST(HttpResponseTests, EmptyContent)
 {
-  auto response = HttpResponse::Builder{}.Build();
-  ASSERT_EQ(response.toString(), "") << "An empty response should result in an empty string";
+  const std::string expectedResponse = R"(Http/1.1 200 OK
+Content-Type: text/html
+Content-Length: 0)";
+  auto response =
+      HttpResponse::Builder(ProtocolVersion::Version_1_1, StatusCode::c_200, "OK", ContentType::text_html).Build();
+  ASSERT_EQ(response.toString(), expectedResponse);
 }
 
 TEST(HttpResponseTests, OnlyHeader)
 {
   const std::string expectedResponse = R"(Http/1.1 200 OK
+Content-Type: text/html
 Server: MyHttp
 Content-Length: 5
-Content-Type: text/html
 
 hallo)";
-  auto response = HttpResponse::Builder{}
-                      .Version(ProtocolVersion::Version_1_1)
-                      .Status(StatusCode::c_200)
-                      .ReasonString("OK")
+  auto response = HttpResponse::Builder(ProtocolVersion::Version_1_1, StatusCode::c_200, "OK", ContentType::text_html)
                       .Server()
-                      .Type(ContentType::text_html)
                       .Content("hallo")
-                      .ContentLength(5)
                       .Build();
 
   std::cout << response.toString();
