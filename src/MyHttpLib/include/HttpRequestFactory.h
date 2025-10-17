@@ -1,36 +1,10 @@
 #pragma once
+#include "HttpTypes.h"
 #include <variant>
 #include <string>
 
 namespace MyHttp
 {
-
-  enum class ProtocolVersion
-  {
-    Version_1_1,
-    kNoEntries
-  };
-
-  enum class Method
-  {
-    Get,
-    Post,
-    Put,
-    Update,
-    kNoEntries
-  };
-
-  enum class StatusCode
-  {
-    c_200,
-  };
-
-  struct HttpResponse
-  {
-    ProtocolVersion version;
-    StatusCode statusCode;
-  };
-
   struct HttpRequestParseError
   {
   };

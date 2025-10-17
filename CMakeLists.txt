@@ -14,7 +14,8 @@ add_executable(MyHttpTests test/HttpRequestFactoryTests.cpp test/ResourceManager
 add_test(NAME MyHttpTests COMMAND MyHttpTests)
 
 add_library(MyHttp src/MyHttpLib/include/TcpConnection.h src/MyHttpLib/include/HttpRequestFactory.h src/MyHttpLib/src/TcpConnection.cpp src/MyHttpLib/src/HttpRequestFactory.cpp
-            src/MyHttpLib/include/ResourceManager.h src/MyHttpLib/src/ResourceManager.cpp src/MyHttpLib/src/HttpServer.cpp src/MyHttpLib/src/TcpServer.cpp src/MyHttpLib/include/TcpServer.h src/MyHttpLib/src/Utils.cpp)
+            src/MyHttpLib/include/ResourceManager.h src/MyHttpLib/src/ResourceManager.cpp src/MyHttpLib/src/HttpServer.cpp src/MyHttpLib/src/TcpServer.cpp src/MyHttpLib/include/TcpServer.h src/MyHttpLib/src/Utils.cpp
+            src/MyHttpLib/src/HttpResponse.cpp)
 
 add_executable(simple_http_server src/server.cpp)
 add_executable(simple_http_client src/client.cpp)

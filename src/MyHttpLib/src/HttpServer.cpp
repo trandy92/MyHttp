@@ -1,6 +1,8 @@
 #include <iostream>
 #include "HttpServer.h"
 #include "HttpRequestFactory.h"
+#include "HttpResponse.h"
+#include "ResourceManager.h"
 #include "Utils.h"
 namespace MyHttp
 {
@@ -31,7 +33,16 @@ namespace MyHttp
                 {
                 case Method::Get:
                 {
-                  mResourceManager.LoadResource(request.resource);
+                  auto resource = mResourceManager.LoadResource(request.resource);
+                  GenericVisit(
+                      resource,
+                      [this](const Resource& res)
+                      {
+                        auto response = HttpResponse::Builder{}.Status(StatusCode::c_200).Build();
+                        // Write(response);
+                      },
+                      [](const ResourceLoadError& err)
+                      { std::cerr << "Failed with error " << err.errorMessage << std::endl; });
                   // request.resource
                 }
                 break;

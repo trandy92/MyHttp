@@ -15,7 +15,7 @@ namespace MyHttp
 
   private:
     TcpServer mTcpServer;
-    ResourceManager mResourceManager{mFs, ResourceConfig{.resourcesDir = "D:/sandbox/myFolder"}};
+    ResourceManager mResourceManager{mFs, ResourceConfig{.resourcesDir = "D:/sandbox/myHttp"}};
     MyHttpFilesystem mFs;
   };
 } // namespace MyHttp

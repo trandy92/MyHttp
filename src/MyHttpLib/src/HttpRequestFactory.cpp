@@ -39,7 +39,7 @@ namespace MyHttp
     std::istream istream(&buf);
     std::string line;
     std::getline(istream, line);
-    std::regex headerFirstLineRegEx(R"((GET|POST|PUT|UPDATE)\s(\S+)\s(\S+))");
+    std::regex headerFirstLineRegEx(R"((GET|POST|PUT|UPDATE)\s(\S+)\s(\S+)\r?)");
     std::smatch match;
     if (!std::regex_match(line, match, headerFirstLineRegEx))
     {
