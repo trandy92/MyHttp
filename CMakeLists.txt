@@ -9,9 +9,10 @@ list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/generators")
 find_package(Boost REQUIRED CONFIG)
 find_package(GTest REQUIRED CONFIG)
 
+include(GoogleTest)
 enable_testing()
-add_executable(MyHttpTests test/HttpRequestFactoryTests.cpp test/ResourceManagerTests.cpp)
-add_test(NAME MyHttpTests COMMAND MyHttpTests)
+add_executable(MyHttpTests test/HttpRequestFactoryTests.cpp test/ResourceManagerTests.cpp test/HttpResponseTests.cpp)
+gtest_discover_tests(MyHttpTests)
 
 add_library(MyHttp src/MyHttpLib/include/TcpConnection.h src/MyHttpLib/include/HttpRequestFactory.h src/MyHttpLib/src/TcpConnection.cpp src/MyHttpLib/src/HttpRequestFactory.cpp
             src/MyHttpLib/include/ResourceManager.h src/MyHttpLib/src/ResourceManager.cpp src/MyHttpLib/src/HttpServer.cpp src/MyHttpLib/src/TcpServer.cpp src/MyHttpLib/include/TcpServer.h src/MyHttpLib/src/Utils.cpp

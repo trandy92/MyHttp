@@ -8,10 +8,6 @@
 
 namespace MyHttp
 {
-  std::optional<ProtocolVersion> ConvertVersionString(std::string version);
-
-  std::optional<Method> ConvertMethodString(std::string method);
-
   std::optional<ProtocolVersion> ConvertVersionString(std::string version)
   {
     std::unordered_map<std::string, ProtocolVersion> versions = {{"HTTP/1.1", ProtocolVersion::Version_1_1}};

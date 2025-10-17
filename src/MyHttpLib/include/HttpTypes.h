@@ -26,11 +26,13 @@ namespace MyHttp
   enum class StatusCode
   {
     c_200,
+    kNoEntries
   };
 
   enum class ContentType
   {
     text_html,
+    kNoEntries
   };
 
 } // namespace MyHttp

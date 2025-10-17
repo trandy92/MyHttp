@@ -40,13 +40,14 @@ namespace MyHttp
                       {
                         auto response = HttpResponse::Builder{}
                                             .Server()
+                                            .Content(res.content)
                                             .ContentLength(res.content.size())
                                             .Status(StatusCode::c_200)
                                             .ReasonString("OK")
                                             .Version(ProtocolVersion::Version_1_1)
                                             .Type(ContentType::text_html)
-                                            .Content(res.content)
                                             .Build();
+                        // Write(reason.toString());
                         // Write(response);
                       },
                       [](const ResourceLoadError& err)
