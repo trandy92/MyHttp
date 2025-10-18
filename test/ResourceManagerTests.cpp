@@ -41,5 +41,27 @@ TEST(ResourceManager, LoadResource_Success)
         EXPECT_EQ(r.content, "Some Content");
         EXPECT_EQ(r.path, "./index.html");
       },
-      [](ResourceLoadError err) { EXPECT_EQ(err.errorMessage, "Resources dir not found."); });
+      [](ResourceLoadError err)
+      {
+        EXPECT_EQ(err.reason, LoadErrorReason::ConfiguredRootDoesNotExist);
+        EXPECT_EQ(err.errorMessage, "Resources dir not found.");
+      });
+}
+
+TEST(ResourceManager, LoadResource_ResourceNotFound)
+{
+  MockFilesystem fs;
+  EXPECT_CALL(fs, Exists(".")).WillOnce(testing::Return(true));
+  EXPECT_CALL(fs, Exists("./index.html")).WillOnce(testing::Return(false));
+
+  ResourceManager rm(fs, ResourceConfig{.resourcesDir = "."});
+  auto result = rm.LoadResource("/");
+  GenericVisit(
+      result,
+      [](Resource r) { ASSERT_TRUE(false) << "If resource is not found, no resource can be loaded."; },
+      [](ResourceLoadError err)
+      {
+        EXPECT_EQ(err.reason, LoadErrorReason::ResourceNotFound);
+        EXPECT_EQ(err.errorMessage, "index.html not found.");
+      });
 }

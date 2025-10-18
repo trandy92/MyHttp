@@ -20,9 +20,16 @@ namespace MyHttp
   {
     std::string resourcesDir;
   };
+  enum class LoadErrorReason
+  {
+    ResourceNotFound,
+    ConfiguredRootDoesNotExist,
+    kNoOfEntries
+  };
   struct ResourceLoadError
   {
     std::string errorMessage;
+    LoadErrorReason reason;
   };
   using ResourceLoadResult = std::variant<Resource, ResourceLoadError>;
 

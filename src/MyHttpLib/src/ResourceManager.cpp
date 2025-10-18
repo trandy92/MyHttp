@@ -14,12 +14,22 @@ namespace MyHttp
       std::string concreteResource{mConfig.resourcesDir + "/index.html"};
       if (!mFs.Exists(concreteResource))
       {
-        return ResourceLoadError{.errorMessage = "index.html not found"};
+        return ResourceLoadError{.errorMessage = "index.html not found."};
       }
       std::string content = mFs.GetContent(concreteResource);
       return Resource{.content = std::move(content), .path = std::move(concreteResource)};
     }
-    return ResourceLoadError{.errorMessage = "Only / supported for now"};
+    else
+    {
+      std::string concreteResource{mConfig.resourcesDir + resource};
+      if (!mFs.Exists(concreteResource))
+      {
+        return ResourceLoadError{.errorMessage = resource + " not found."};
+      }
+      std::string content = mFs.GetContent(concreteResource);
+      return Resource{.content = std::move(content), .path = std::move(concreteResource)};
+    }
+    return ResourceLoadError{.errorMessage = "Only / supported for now."};
   }
   ResourceManager::ResourceManager(MyHttpFilesystem& fs, ResourceConfig config) : mConfig(std::move(config)), mFs(fs)
   {
