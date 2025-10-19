@@ -1,5 +1,6 @@
 #pragma once
 
+#include "HttpTypes.h"
 #include <future>
 #include <utility>
 #include <variant>
@@ -8,8 +9,9 @@ namespace MyHttp
   class MyHttpFilesystem
   {
   public:
-    virtual bool Exists(std::string path) const;
-    virtual std::string GetContent(std::string path) const;
+    virtual bool Exists(std::string_view path) const;
+    virtual std::string GetContent(std::string_view path) const;
+    virtual std::string GetExtension(std::string_view path) const;
   };
 
   template<typename F, typename... T>

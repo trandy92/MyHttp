@@ -8,14 +8,14 @@ using namespace MyHttp;
 class MockFilesystem : public MyHttp::MyHttpFilesystem
 {
 public:
-  MOCK_METHOD(bool, Exists, (std::string), (const, override));
-  MOCK_METHOD(std::string, GetContent, (std::string), (const, override));
+  MOCK_METHOD(bool, Exists, (std::string_view), (const, override));
+  MOCK_METHOD(std::string, GetContent, (std::string_view), (const, override));
 };
 
 TEST(ResourceManager, LoadResource_ConfiguredRootDoesNotExist)
 {
   MockFilesystem fs;
-  EXPECT_CALL(fs, Exists(".")).Times(1).WillOnce(testing::Return(false));
+  EXPECT_CALL(fs, Exists(std::string_view("."))).Times(1).WillOnce(testing::Return(false));
 
   ResourceManager rm(fs, ResourceConfig{.resourcesDir = "."});
   auto result = rm.LoadResource("/");
@@ -28,9 +28,9 @@ TEST(ResourceManager, LoadResource_ConfiguredRootDoesNotExist)
 TEST(ResourceManager, LoadResource_Success)
 {
   MockFilesystem fs;
-  EXPECT_CALL(fs, Exists(".")).WillOnce(testing::Return(true));
-  EXPECT_CALL(fs, Exists("./index.html")).WillOnce(testing::Return(true));
-  EXPECT_CALL(fs, GetContent("./index.html")).WillOnce(testing::Return("Some Content"));
+  EXPECT_CALL(fs, Exists(std::string_view("."))).WillOnce(testing::Return(true));
+  EXPECT_CALL(fs, Exists(std::string_view("./index.html"))).WillOnce(testing::Return(true));
+  EXPECT_CALL(fs, GetContent(std::string_view("./index.html"))).WillOnce(testing::Return("Some Content"));
 
   ResourceManager rm(fs, ResourceConfig{.resourcesDir = "."});
   auto result = rm.LoadResource("/");
@@ -51,8 +51,8 @@ TEST(ResourceManager, LoadResource_Success)
 TEST(ResourceManager, LoadResource_ResourceNotFound)
 {
   MockFilesystem fs;
-  EXPECT_CALL(fs, Exists(".")).WillOnce(testing::Return(true));
-  EXPECT_CALL(fs, Exists("./index.html")).WillOnce(testing::Return(false));
+  EXPECT_CALL(fs, Exists(std::string_view("."))).WillOnce(testing::Return(true));
+  EXPECT_CALL(fs, Exists(std::string_view("./index.html"))).WillOnce(testing::Return(false));
 
   ResourceManager rm(fs, ResourceConfig{.resourcesDir = "."});
   auto result = rm.LoadResource("/");

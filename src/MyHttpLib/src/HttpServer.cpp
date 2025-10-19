@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdexcept>
 #include "HttpServer.h"
 #include "HttpRequestFactory.h"
 #include "HttpResponse.h"
@@ -35,21 +36,36 @@ namespace MyHttp
                 case Method::Get:
                 {
                   auto resource = mResourceManager.LoadResource(request.resource);
-                  GenericVisit(
+                  auto response = GenericVisit(
                       resource,
-                      [this](const Resource& res)
+                      [](const Resource& res)
                       {
-                        auto response =
-                            HttpResponse::Builder(
-                                ProtocolVersion::Version_1_1, StatusCode::c_200, "OK", ContentType::text_html)
-                                .Server()
-                                .Content(res.content)
-                                .Build();
-                        Write(response.toString());
+                        return HttpResponse::Builder(ProtocolVersion::Version_1_1, StatusCode::c_200, "OK", res.type)
+                            .Server()
+                            .Content(res.content)
+                            .Build();
                       },
-                      [](const ResourceLoadError& err)
-                      { std::cerr << "Failed with error " << err.errorMessage << std::endl; });
-                  // request.resource
+                      [res = request.resource](const ResourceLoadError& err)
+                      {
+                        static_assert(static_cast<int>(LoadErrorReason::kNoOfEntries) == 2);
+                        switch (err.reason)
+                        {
+                        case LoadErrorReason::ResourceNotFound:
+                          return HttpResponse::Builder(ProtocolVersion::Version_1_1,
+                                                       StatusCode::c_404,
+                                                       "Not Found",
+                                                       ContentType::text_html)
+                              .Server()
+                              .Content(GetNotFoundHtml(res))
+                              .Build();
+
+                        case LoadErrorReason::ConfiguredRootDoesNotExist:
+                        case LoadErrorReason::kNoOfEntries:
+                          break;
+                        }
+                        throw std::runtime_error("Error type not yet handled.");
+                      });
+                  Write(response.toString());
                 }
                 break;
                 case Method::Post:

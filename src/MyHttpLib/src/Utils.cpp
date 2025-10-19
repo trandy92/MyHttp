@@ -4,19 +4,25 @@
 
 namespace MyHttp
 {
-  bool MyHttpFilesystem::Exists(std::string path) const
+  bool MyHttpFilesystem::Exists(std::string_view path) const
   {
     return std::filesystem::exists(path);
   }
 
-  std::string MyHttpFilesystem::GetContent(std::string path) const
+  std::string MyHttpFilesystem::GetContent(std::string_view path) const
   {
-    std::ifstream ifs(path);
-    std::stringstream strstream;
-    strstream << ifs.rdbuf();
-    std::string content = strstream.str();
-    ifs.close();
+    std::ifstream ifs(std::filesystem::path(path), std::ios::binary);
+    if (!ifs)
+    {
+      return {};
+    }
+
+    std::string content((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
     return content;
   }
 
+  std::string MyHttpFilesystem::GetExtension(std::string_view path) const
+  {
+    return std::filesystem::path(path).extension().string();
+  }
 } // namespace MyHttp

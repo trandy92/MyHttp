@@ -1,5 +1,6 @@
 #pragma once
 
+#include "HttpTypes.h"
 #include "Utils.h"
 #include <string>
 #include <variant>
@@ -14,6 +15,7 @@ namespace MyHttp
   {
     std::string content;
     fs::path path;
+    ContentType type;
   };
 
   struct ResourceConfig

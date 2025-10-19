@@ -5,6 +5,9 @@
 
 namespace MyHttp
 {
+
+  Content GetNotFoundHtml(std::string path);
+
   class HttpResponse
   {
   public:
@@ -28,7 +31,7 @@ namespace MyHttp
     Builder(ProtocolVersion version, StatusCode statusCode, ReasonStr reasonStr, ContentType contentType);
 
     Builder& Server();
-    Builder& Content(Content type);
+    Builder& Content(Content content);
 
     HttpResponse Build();
 

@@ -1,5 +1,6 @@
 #include "HttpResponse.h"
 
+#include <format>
 #include <utility>
 #include <sstream>
 
@@ -50,11 +51,13 @@ namespace MyHttp
 
   std::string GetStatusCodeString(const StatusCode& statusCode)
   {
-    static_assert(static_cast<int>(StatusCode::kNoEntries) == 1);
+    static_assert(static_cast<int>(StatusCode::kNoEntries) == 2);
     switch (statusCode)
     {
     case StatusCode::c_200:
       return "200";
+    case StatusCode::c_404:
+      return "404";
     default:
       throw std::invalid_argument("Status code not yet considered");
     }
@@ -62,13 +65,21 @@ namespace MyHttp
 
   std::string GetContentTypeString(const ContentType& contentType)
   {
-    static_assert(static_cast<int>(ContentType::kNoEntries) == 1);
+    static_assert(static_cast<int>(ContentType::kNoEntries) == 5);
     switch (contentType)
     {
     case ContentType::text_html:
       return "text/html";
+    case ContentType::image_jpeg:
+      return "image/jpeg";
+    case ContentType::image_png:
+      return "image/png";
+    case ContentType::application_json:
+      return "application/json";
+    case ContentType::application_octet_stream:
+      return "application/octet_stream";
     default:
-      throw std::invalid_argument("Content type not yet considered");
+      return "application/octet_stream";
     }
   }
 
@@ -95,4 +106,16 @@ namespace MyHttp
     return response.str();
   }
 
+  Content GetNotFoundHtml(std::string path)
+  {
+    return std::format(R"(<!DOCTYPE html>
+<html>
+<head><title>404 Not Found</title></head>
+<body>
+<h1>Not Found</h1>
+<p>The requested URL {} was not found on this server.</p>
+</body>
+</html>)",
+                       path);
+  }
 } // namespace MyHttp

@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.21)
 project(MyHttp LANGUAGES CXX)
 
+add_definitions(-D_WIN32_WINNT=0x0601)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 

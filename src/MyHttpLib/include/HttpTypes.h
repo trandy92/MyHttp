@@ -26,12 +26,17 @@ namespace MyHttp
   enum class StatusCode
   {
     c_200,
+    c_404,
     kNoEntries
   };
 
   enum class ContentType
   {
     text_html,
+    image_jpeg,
+    image_png,
+    application_json,
+    application_octet_stream,
     kNoEntries
   };
 
